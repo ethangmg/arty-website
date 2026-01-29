@@ -145,7 +145,7 @@ const Header: React.FC<HeaderProps> = ({ className = '', isProjectPage = false }
           {/* Logo */}
           <div className="flex items-center space-x-3">
             <img 
-              src="/src/assets/logo/arty-studio-yellow-logo.png" 
+              src="/assets/logo/arty-studio-yellow-logo.png" 
               alt="Arty Studio Logo" 
               className="w-10 h-10"
             />
