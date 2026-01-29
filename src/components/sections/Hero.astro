@@ -1,40 +1,77 @@
 ---
-// Hero Section Component
-import Carousel from '../Carousel.tsx';
-
-const slides = [
-  {
-    image: '../../src/assets/carousel-images/C1-Image.png',
-    alt: 'Modern Luxury House',
-    title: 'Modern Architecture Excellence',
-    subtitle: 'Creating timeless spaces that inspire and endure'
-  },
-  {
-    image: '../../src/assets/carousel-images/C2-Image.png',
-    alt: 'Contemporary Villa',
-    title: 'Contemporary Design',
-    subtitle: 'Innovative solutions for modern living'
-  },
-  {
-    image: '../../src/assets/carousel-images/C4-Image.jpg',
-    alt: 'Elegant Mansion',
-    title: 'Elegant Residences',
-    subtitle: 'Where luxury meets functionality'
-  }
-];
+// Hero Section Component with Video Background
 ---
 
-<!-- Hero Section with React Carousel -->
-<section id="home" class="hero">
-  <Carousel 
-    slides={slides}
-    autoplay={true}
-    showControls={true}
-    showDots={true}
-    carouselId="hero-carousel"
-    height="100vh"
-    client:load
-  />
+<!-- Hero Section with Video Background -->
+<section id="home" class="hero relative w-full h-screen overflow-hidden">
+  <video
+    autoplay
+    loop
+    muted
+    playsinline
+    class="absolute top-0 left-0 w-full h-full object-cover"
+  >
+    <source src="/assets/hero-video/WEB VIDEO 2026 (6).mp4" type="video/mp4" />
+    Your browser does not support the video tag.
+  </video>
+  
+  <!-- Optional overlay for better text readability if needed -->
+  <div class="absolute inset-0 bg-black/20 z-10"></div>
+  
+  <!-- View projects button -->
+  <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-20">
+    <a 
+      href="#projects" 
+      id="view-projects-btn"
+      class="text-white text-2xl font-bold border-b hover:border-none px-4 py-2 rounded-md hover:bg-black/70 transition-colors duration-300 cursor-pointer inline-block"
+    >
+      View Projects
+    </a>
+    <a href="#contact" class="text-white text-2xl font-bold border-b hover:border-none px-4 py-2 rounded-md hover:bg-black/70 transition-colors duration-300 cursor-pointer inline-block">
+      Get a quote
+    </a>
+  </div>
 </section>
 
+<style>
+  .hero {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+  }
+  
+  .hero video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+  }
+</style>
 
+<script>
+  // Handle smooth scroll for View Projects button
+  document.addEventListener('DOMContentLoaded', () => {
+    const viewProjectsBtn = document.getElementById('view-projects-btn');
+    if (viewProjectsBtn) {
+      viewProjectsBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetId = viewProjectsBtn.getAttribute('href')?.replace('#', '');
+        if (targetId) {
+          const targetElement = document.getElementById(targetId);
+          if (targetElement) {
+            // Update URL
+            window.history.pushState(null, '', `#${targetId}`);
+            // Smooth scroll
+            targetElement.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start'
+            });
+          }
+        }
+      });
+    }
+  });
+</script>
