@@ -1,33 +1,69 @@
 ---
-// Hero Section Component with Video Background
+// Hero Section Component: video on desktop, carousel on mobile
+import Carousel from '../Carousel.tsx';
+
+const slides = [
+  {
+    image: '/assets/carousel-images/C1-Image.png',
+    alt: 'Modern Luxury House',
+    title: 'Modern Architecture Excellence',
+    subtitle: 'Creating timeless spaces that inspire and endure'
+  },
+  {
+    image: '/assets/carousel-images/C2-Image.png',
+    alt: 'Contemporary Villa',
+    title: 'Contemporary Design',
+    subtitle: 'Innovative solutions for modern living'
+  },
+  {
+    image: '/assets/carousel-images/C4-Image.jpg',
+    alt: 'Elegant Mansion',
+    title: 'Elegant Residences',
+    subtitle: 'Where luxury meets functionality'
+  }
+];
 ---
 
-<!-- Hero Section with Video Background -->
+<!-- Hero Section: video (desktop) / carousel (mobile) -->
 <section id="home" class="hero relative w-full h-screen overflow-hidden">
+  <!-- Desktop: video -->
   <video
     autoplay
     loop
     muted
     playsinline
-    class="absolute top-0 left-0 w-full h-full object-cover"
+    class="absolute top-0 left-0 w-full h-full object-cover hidden md:block"
   >
     <source src="/assets/hero-video/WEB VIDEO 2026 (6).mp4" type="video/mp4" />
     Your browser does not support the video tag.
   </video>
-  
-  <!-- Optional overlay for better text readability if needed -->
+
+  <!-- Mobile: carousel -->
+  <div class="block md:hidden absolute inset-0 z-0">
+    <Carousel
+      slides={slides}
+      autoplay={true}
+      showControls={true}
+      showDots={true}
+      carouselId="hero-carousel"
+      height="100vh"
+      client:load
+    />
+  </div>
+
+  <!-- Overlay -->
   <div class="absolute inset-0 bg-black/20 z-10"></div>
-  
-  <!-- View projects button -->
-  <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-20">
+     
+  <!-- View projects + Get a quote buttons (always in row) -->
+  <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-20 flex flex-row items-center justify-center gap-3 sm:gap-4 flex-nowrap">
     <a 
       href="#projects" 
       id="view-projects-btn"
-      class="text-white text-2xl font-bold border-b hover:border-none px-4 py-2 rounded-md hover:bg-black/70 transition-colors duration-300 cursor-pointer inline-block"
+      class="text-white text-lg sm:text-2xl font-bold border-b hover:border-none px-3 sm:px-4 py-2 rounded-md hover:bg-black/70 transition-colors duration-300 cursor-pointer inline-block whitespace-nowrap"
     >
       View Projects
     </a>
-    <a href="#contact" class="text-white text-2xl font-bold border-b hover:border-none px-4 py-2 rounded-md hover:bg-black/70 transition-colors duration-300 cursor-pointer inline-block">
+    <a href="#contact" class="text-white text-lg sm:text-2xl font-bold border-b hover:border-none px-3 sm:px-4 py-2 rounded-md hover:bg-black/70 transition-colors duration-300 cursor-pointer inline-block whitespace-nowrap">
       Get a quote
     </a>
   </div>
