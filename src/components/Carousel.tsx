@@ -78,43 +78,7 @@ const Carousel: React.FC<CarouselProps> = ({
         ))}
       </div>
 
-      {/* Controls */}
-      {showControls && (
-        <div className="absolute inset-y-0 left-0 right-0 flex items-center justify-between z-20">
-          <button
-            onClick={prevSlide}
-            className="hover:backdrop-blur-sm text-white text-3xl p-4 rounded-full transition-all duration-300"
-            aria-label="Previous slide"
-          >
-            ‹
-          </button>
-          <button
-            onClick={nextSlide}
-            className="hover:backdrop-blur-sm text-white text-3xl p-4 rounded-full transition-all duration-300"
-            aria-label="Next slide"
-          >
-            ›
-          </button>
-        </div>
-      )}
-
-      {/* Dots */}
-      {showDots && (
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-4 z-20">
-          {slides.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => goToSlide(index)}
-              className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                index === currentSlide
-                  ? 'bg-white'
-                  : 'bg-white bg-opacity-50 hover:bg-opacity-75'
-              }`}
-              aria-label={`Go to slide ${index + 1}`}
-            />
-          ))}
-        </div>
-      )}
+     
     </div>
   );
 };
