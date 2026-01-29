@@ -20,6 +20,9 @@ const Header: React.FC<HeaderProps> = ({ className = '', isProjectPage = false }
   ];
 
   // Handle scroll detection and scroll spy
+// ... existing code ...
+
+  // Handle scroll detection and scroll spy
   useEffect(() => {
     if (isProjectPage) return; // Skip scroll detection on project pages
 
@@ -32,14 +35,43 @@ const Header: React.FC<HeaderProps> = ({ className = '', isProjectPage = false }
         setIsScrolled(scrollY > heroHeight * 0.8);
       }
 
-      // Scroll spy for active section
-      const sections = ['about', 'services', 'projects', 'contact'];
-      const currentSection = sections.find(sectionId => {
+      // Scroll spy for active section - check all sections including home
+      const sections = ['home', 'about', 'services', 'projects', 'contact'];
+      let currentSection = null;
+      
+      // Check sections in reverse order to prioritize the first one we encounter when scrolling up
+      for (let i = sections.length - 1; i >= 0; i--) {
+        const sectionId = sections[i];
         const element = document.getElementById(sectionId);
-        if (!element) return false;
+        if (!element) continue;
+        
         const rect = element.getBoundingClientRect();
-        return rect.top <= 100 && rect.bottom >= 100;
-      });
+        
+        // For home section, check if we're at the top or above the about section
+        if (sectionId === 'home') {
+          const aboutSection = document.getElementById('about');
+          if (aboutSection) {
+            const aboutRect = aboutSection.getBoundingClientRect();
+            // Check that heroSection is not null before accessing offsetHeight
+            if (
+              aboutRect.top > 100 ||
+              (heroSection && scrollY < heroSection.offsetHeight * 0.5)
+            ) {
+              currentSection = 'home';
+              break;
+            }
+          } else if (scrollY < 100) {
+            currentSection = 'home';
+            break;
+          }
+        } else {
+          // For other sections, check if they're in view
+          if (rect.top <= 100 && rect.bottom >= 100) {
+            currentSection = sectionId;
+            break;
+          }
+        }
+      }
 
       if (currentSection) {
         setActiveSection(currentSection);
@@ -56,6 +88,7 @@ const Header: React.FC<HeaderProps> = ({ className = '', isProjectPage = false }
 
     return () => window.removeEventListener('scroll', handleScroll);
   }, [isProjectPage]);
+
 
   // Handle navigation
   const handleNavClick = (href: string, e: React.MouseEvent) => {
@@ -104,10 +137,9 @@ const Header: React.FC<HeaderProps> = ({ className = '', isProjectPage = false }
     return () => window.removeEventListener('popstate', handlePopState);
   }, [isProjectPage]);
 
+  //isScrolled || isProjectPage === true ? 'backdrop-blur-sm bg-white/50' : 'bg-transparent'
   return (
-    <header className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
-      isScrolled || isProjectPage === true ? 'backdrop-blur-sm bg-white/50' : 'bg-transparent'
-    } ${className}`}>
+    <header className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 backdrop-blur-lg ${className}`}>
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}

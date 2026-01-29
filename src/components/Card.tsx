@@ -26,7 +26,7 @@ const Card: React.FC<CardProps> = ({
   
   const imageClasses = variant === 'project' 
     ? "w-full h-64 object-cover" 
-    : "w-24 h-24 mx-auto object-cover rounded-lg mb-4";
+    : "w-24 h-24 mx-auto object-contain rounded-lg mb-4";
   
   const titleClasses = variant === 'project'
     ? "text-xl font-semibold mb-2 text-gray-800"
