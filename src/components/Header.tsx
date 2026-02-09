@@ -282,6 +282,24 @@ const Header: React.FC<HeaderProps> = ({
               </a>
             );
             })}
+            {/* Language switcher - mobile */}
+            {localeUrls && (
+              <div className="flex items-center gap-2 px-3 py-3 mt-2 border-t border-gray-200 text-sm font-medium">
+                <a
+                  href={localeUrls.en}
+                  className={locale === 'en' ? 'text-gray-900 underline' : 'text-gray-600 hover:text-gray-900'}
+                >
+                  EN
+                </a>
+                <span className="text-gray-400">|</span>
+                <a
+                  href={localeUrls.es}
+                  className={locale === 'es' ? 'text-gray-900 underline' : 'text-gray-600 hover:text-gray-900'}
+                >
+                  ES
+                </a>
+              </div>
+            )}
           </div>
         </div>
       </nav>
