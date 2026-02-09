@@ -40,7 +40,7 @@ const projectsUrl = getRelativeLocaleUrl(locale, '/') + '#projects';
 ---
 
 <Layout locale={locale} title={`${project.title} - Project Details`}>
-  <Header locale={locale} basePath={basePath} isProjectPage={true} localeUrls={localeUrls} navItems={navItems} />
+  <Header client:load locale={locale} basePath={basePath} isProjectPage={true} localeUrls={localeUrls} navItems={navItems} />
   
   <div class="project-detail max-w-7xl mx-auto">
     <!-- Project Header -->
