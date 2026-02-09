@@ -1,4 +1,5 @@
 ---
+import { getRelativeLocaleUrl } from 'astro:i18n';
 import Layout from "../layouts/Layout.astro";
 import Header from "../components/Header.tsx";
 import Hero from "../components/sections/Hero.astro";
@@ -6,29 +7,44 @@ import About from "../components/sections/About.astro";
 import Services from "../components/sections/Services.astro";
 import Projects from "../components/sections/Projects.astro";
 import Contact from "../components/sections/Contact.astro";
+import { getTranslations } from '../i18n/translations';
+
+const locale = (Astro.currentLocale ?? 'en') as 'en' | 'es';
+const basePath = locale === 'en' ? '' : `/${locale}`;
+const localeUrls = {
+  en: getRelativeLocaleUrl('en', '/'),
+  es: getRelativeLocaleUrl('es', '/'),
+};
+const t = getTranslations(locale);
+const navItems = [
+  { id: 'home' as const, label: t.nav.home },
+  { id: 'about' as const, label: t.nav.about },
+  { id: 'services' as const, label: t.nav.services },
+  { id: 'projects' as const, label: t.nav.projects },
+  { id: 'contact' as const, label: t.nav.contact },
+];
 ---
 
-<Layout title="Architect Portfolio - Professional Architecture Services">
-  <Header client:load />
-
-  <div id="home">
-    <Hero />
+<Layout locale={locale}>
+  <Header client:load locale={locale} basePath={basePath} isProjectPage={false} localeUrls={localeUrls} navItems={navItems} />
+  <div>
+    <Hero locale={locale} />
   </div>
 
   <div id="about">
-    <About />
+    <About locale={locale} />
   </div>
 
   <div id="services">
-    <Services />
+    <Services locale={locale} />
   </div>
 
   <div id="projects">
-    <Projects />
+    <Projects locale={locale} />
   </div>
 
   <div id="contact">
-    <Contact />
+    <Contact locale={locale} />
   </div>
 
   <script>

@@ -1,0 +1,65 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import Layout from "../../layouts/Layout.astro";
+import Header from "../../components/Header.tsx";
+import Hero from "../../components/sections/Hero.astro";
+import About from "../../components/sections/About.astro";
+import Services from "../../components/sections/Services.astro";
+import Projects from "../../components/sections/Projects.astro";
+import Contact from "../../components/sections/Contact.astro";
+import { getTranslations } from '../../i18n/translations';
+
+const locale = 'es';
+const basePath = `/${locale}`;
+const localeUrls = {
+  en: getRelativeLocaleUrl('en', '/'),
+  es: getRelativeLocaleUrl('es', '/'),
+};
+const t = getTranslations(locale);
+const navItems = [
+  { id: 'home' as const, label: t.nav.home },
+  { id: 'about' as const, label: t.nav.about },
+  { id: 'services' as const, label: t.nav.services },
+  { id: 'projects' as const, label: t.nav.projects },
+  { id: 'contact' as const, label: t.nav.contact },
+];
+---
+
+<Layout locale={locale}>
+  <Header client:load locale={locale} basePath={basePath} isProjectPage={false} localeUrls={localeUrls} navItems={navItems} />
+
+  <div>
+    <Hero locale={locale} />
+  </div>
+
+  <div id="about">
+    <About locale={locale} />
+  </div>
+
+  <div id="services">
+    <Services locale={locale} />
+  </div>
+
+  <div id="projects">
+    <Projects locale={locale} />
+  </div>
+
+  <div id="contact">
+    <Contact locale={locale} />
+  </div>
+
+  <script>
+    // Handle initial page load with hash
+    document.addEventListener("DOMContentLoaded", () => {
+      const hash = window.location.hash;
+      if (hash) {
+        const targetElement = document.getElementById(hash.replace("#", ""));
+        if (targetElement) {
+          setTimeout(() => {
+            targetElement.scrollIntoView({ behavior: "smooth" });
+          }, 100);
+        }
+      }
+    });
+  </script>
+</Layout>

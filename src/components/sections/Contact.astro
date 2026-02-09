@@ -1,50 +1,53 @@
 ---
-// Contact Section Component
----
+import { getTranslations } from '../../i18n/translations';
+import type { Locale } from '../../i18n/translations';
 
+export interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getTranslations(locale);
+const contact = [
+  { title: t.contact.email, value: 'mmora@artyarquitectura.com' },
+  { title: t.contact.phone, value: '+506 89567307' },
+  { title: t.contact.address, value: t.contact.addressValue },
+  { title: t.contact.hours, value: t.contact.hoursValue },
+];
+---
 <!-- Contact Section -->
 <section id="contact" class="py-24">
   <div class="max-w-6xl mx-auto px-8">
     <div class="text-center mb-16">
-      <h2 class="text-4xl font-semibold mb-4 text-gray-800">Contact Us</h2>
-      <p class="text-lg text-gray-600 max-w-2xl mx-auto">Ready to start your next architectural project? Let's discuss your vision</p>
+      <h2 class="text-4xl font-semibold mb-4 text-gray-800">{t.contact.title}</h2>
+      <p class="text-lg text-gray-600 max-w-2xl mx-auto">{t.contact.subtitle}</p>
     </div>
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 ">
       <div class="contact-info bg-gray-50 p-2 rounded-lg">
-        <h3 class="text-3xl font-semibold mb-8 text-gray-800">Get In Touch</h3>
+        <h3 class="text-3xl font-semibold mb-8 text-gray-800">{t.contact.getInTouch}</h3>
         <div class="space-y-8">
-          <div class="contact-item">
-            <h4 class="text-lg font-semibold mb-2 text-gray-800">Email</h4>
-            <p class="text-gray-600 leading-relaxed">info@architectportfolio.com</p>
-          </div>
-          <div class="contact-item">
-            <h4 class="text-lg font-semibold mb-2 text-gray-800">Phone</h4>
-            <p class="text-gray-600 leading-relaxed">+1 (555) 123-4567</p>
-          </div>
-          <div class="contact-item">
-            <h4 class="text-lg font-semibold mb-2 text-gray-800">Address</h4>
-            <p class="text-gray-600 leading-relaxed">123 Architecture Lane<br>Design City, DC 12345</p>
-          </div>
-          <div class="contact-item">
-            <h4 class="text-lg font-semibold mb-2 text-gray-800">Hours</h4>
-            <p class="text-gray-600 leading-relaxed">Monday - Friday: 9:00 AM - 6:00 PM<br>Saturday: 10:00 AM - 4:00 PM</p>
-          </div>
+          {contact.map((item) => (
+            <div class="contact-item">
+              <h4 class="text-lg font-semibold mb-2 text-gray-800">{item.title}</h4>
+              <p class="text-gray-600 leading-relaxed">{item.value}</p>
+            </div>
+          ))}
         </div>
       </div>
       <form class="contact-form flex flex-col space-y-6">
         <div class="form-group">
-          <input type="text" name="name" placeholder="Your Name" required class="w-full p-4 border border-gray-300 rounded text-base font-inherit transition-colors duration-300 focus:outline-none focus:border-gray-800">
+          <input type="text" name="name" placeholder={t.contact.placeholderName} required class="w-full p-4 border border-gray-300 rounded text-base font-inherit transition-colors duration-300 focus:outline-none focus:border-gray-800">
         </div>
         <div class="form-group">
-          <input type="email" name="email" placeholder="Your Email" required class="w-full p-4 border border-gray-300 rounded text-base font-inherit transition-colors duration-300 focus:outline-none focus:border-gray-800">
+          <input type="email" name="email" placeholder={t.contact.placeholderEmail} required class="w-full p-4 border border-gray-300 rounded text-base font-inherit transition-colors duration-300 focus:outline-none focus:border-gray-800">
         </div>
         <div class="form-group">
-          <input type="text" name="subject" placeholder="Subject" required class="w-full p-4 border border-gray-300 rounded text-base font-inherit transition-colors duration-300 focus:outline-none focus:border-gray-800">
+          <input type="text" name="subject" placeholder={t.contact.placeholderSubject} required class="w-full p-4 border border-gray-300 rounded text-base font-inherit transition-colors duration-300 focus:outline-none focus:border-gray-800">
         </div>
         <div class="form-group">
-          <textarea name="message" placeholder="Your Message" rows="5" required class="w-full p-4 border border-gray-300 rounded text-base font-inherit transition-colors duration-300 focus:outline-none focus:border-gray-800"></textarea>
+          <textarea name="message" placeholder={t.contact.placeholderMessage} rows="5" required class="w-full p-4 border border-gray-300 rounded text-base font-inherit transition-colors duration-300 focus:outline-none focus:border-gray-800"></textarea>
         </div>
-        <button type="submit" class="bg-gray-800 text-white px-8 py-4 border-none rounded text-base font-medium cursor-pointer transition-colors duration-300 hover:bg-gray-600">Send Message</button>
+        <button type="submit" class="bg-gray-800 text-white px-8 py-4 border-none rounded text-base font-medium cursor-pointer transition-colors duration-300 hover:bg-gray-600">{t.contact.sendMessage}</button>
       </form>
     </div>
   </div>

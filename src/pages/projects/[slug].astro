@@ -1,8 +1,10 @@
 ---
+import { getRelativeLocaleUrl } from 'astro:i18n';
 import Layout from '../../layouts/Layout.astro';
 import Header from '../../components/Header.tsx';
 import ProjectGallery from '../../components/ProjectGallery.tsx';
-import ProjectHeader from '../../components/ProjectHeader.astro';
+import { getProject } from '../../i18n/projects';
+import { getTranslations } from '../../i18n/translations';
 
 export async function getStaticPaths() {
   return [
@@ -16,201 +18,35 @@ export async function getStaticPaths() {
 }
 
 const { slug } = Astro.params;
-
-// Project data - in a real app, this would come from a CMS or database
-const projects: Record<string, any> = {
-  'casa-b': {
-    title: 'Casa B',
-    subtitle: 'Contemporary residential design featuring clean lines and sustainable materials',
-    description: 'Casa B is a cozy retreat where the architecture feels close, intimate, and natural. The polished concrete floors and walls create a solid and elegant base, while the wood details add warmth and texture, enveloping every corner with a sense of home. The heart of the house lies in the fluid relationship between the spaces: the kitchen, living room, terrace, and pool intertwine in the same environment, designed to enjoy community life without losing harmony with the surroundings.',
-    year: '2023',
-    location: 'Ballena, Osa',
-    size: '4,500 sq ft',
-    type: 'Residential',
-    architect: 'Lead Architect',
-    images: [
-      '/assets/project-images/CASA-B.png',
-      '/assets/project-images/Casa B/Casa-B-interior.jpg',
-      '/assets/project-images/Casa B/Casa-B-Pool.jpg',
-      '/assets/project-images/Casa B/Casa-B-interior-v2.jpg',
-      '/assets/project-images/Casa B/Casa-B-Exterior-v2.jpg',
-      '/assets/project-images/Casa B/Casa-B-interior-v3.jpg',
-    ],
-    blueprints: [
-      '/assets/project-images/Casa B/Casa-B-Blueprint.jpg'
-    ],
-    features: [
-      'Open floor plan with seamless indoor-outdoor flow',
-      'Energy-efficient design with solar panel integration',
-      'Premium materials including natural stone and hardwood',
-      'Smart home technology integration',
-      'Landscaped garden with native plant species',
-      'Three-car garage with electric vehicle charging'
-    ]
-  },
-  'casa-c': {
-    title: 'Casa C',
-    subtitle: 'Modern workspace design promoting collaboration and productivity',
-    description: 'This cutting-edge office building redefines the modern workplace, creating an environment that fosters innovation and collaboration. The design emphasizes natural light, flexible spaces, and sustainable materials to create a productive and inspiring work environment.',
-    year: '2023',
-    location: 'Ballena, Osa',
-    size: '25,000 sq ft',
-    type: 'Commercial',
-    architect: 'Lead Architect',
-    images: [
-      '/assets/project-images/Casa C/C_HOUSE_EXTERIOR.jpg',
-      '/assets/project-images/Casa C/C_HOUSE_INTERIOR-2.jpg',
-      '/assets/project-images/Casa C/C_HOUSE_INTERIOR.jpg',
-      '/assets/project-images/Casa C/C_HOUSE_POOL.jpg',
-      '/assets/project-images/Casa C/Casa_C_Exterior_2.jpg',
-      '/assets/project-images/Casa C/C_HOUSE-INTERIOR.jpg',
-    ],
-    blueprints: [
-      '/assets/project-images/Casa Vista Linda/Linda-Vista-Blueprint.jpg'
-    ],
-    features: [
-      'Open-plan workspace with flexible furniture systems',
-      'Collaboration zones with writable walls',
-      'Private meeting rooms with video conferencing',
-      'Wellness center with fitness facilities',
-      'Rooftop terrace with city views',
-      'LEED Platinum certification',
-      'Bike storage and electric vehicle charging'
-    ]
-  },
-  'linda-vista': {
-    title: 'Casa Vista Linda',
-    subtitle: 'Casa Vista Linda, located in Chontales de Osa, has been architecturally designed to maximize the property\'s breathtaking views.',
-    description: 'Casa Vista Linda, located in Chontales de Osa, has been architecturally designed to maximize the property’s stunning views. The common areas, such as the kitchen and living room, are seamlessly integrated with the terrace and pool, and each of the bedrooms offers ocean views. As its name suggests, most of the spaces provide access to a “Vista Linda”',
-    year: '2022',
-    location: 'Chontales, Osa',
-    size: '8,500 sq ft',
-    type: 'Residential',
-    architect: 'Lead Architect',
-    images: [
-      '/assets/project-images/CASA-VISTA-LINDA.png',
-      '/assets/carousel-images/C2-Image.png',
-      '/assets/carousel-images/C1-Image.png',
-      '/assets/project-images/Casa Vista Linda/Linda-Vista-interior.jpg',
-      '/assets/project-images/Casa Vista Linda/Linda-Vista-Exterior.jpg',
-      '/assets/project-images/Casa Vista Linda/Linda-Vista-Interior-v2.jpg',
-    ],
-    blueprints: [
-      '/assets/project-images/Casa Vista Linda/Linda-Vista-Blueprint.jpg'
-    ],
-    features: [
-      'Grand entrance with double-height foyer',
-      'Master suite with private balcony and ocean views',
-      'Professional-grade kitchen with custom cabinetry',
-      'Wine cellar with climate control system',
-      'Home theater with surround sound',
-      'Infinity pool with integrated spa',
-      'Guest house with separate entrance'
-    ]
-  },
-  'casa-punta-del-rio': {
-    title: 'Casa Punta del Rio',
-    subtitle: 'This project, located in Marina Vista, Dominicalito, was designed to blend architecture with nature in a single harmonious language.',
-    description:"This project, located in Marina Vista, Dominicalito, was conceived to blend architecture with nature in a single harmonious language. With a view that embraces both the sea and the mountains, the house becomes a sensory refuge where the serenity of the ocean and the majesty of the tropical forest converge. Inspired by the Jungle Modern Design concept, we developed an architectural proposal that exudes freedom and natural elegance, accompanied by purposefully designed furniture and a mood board of fresh, light, and organic finishes that elevate the aesthetic and emotional experience of the space.",
-    year: '2022',
-    location: 'Dominicalito, Osa',
-    size: '1,500 sq ft',
-    type: 'Residential',
-    architect: 'Lead Architect',
-    images: [
-      '/assets/project-images/Casa Punta del Rio/Punta-del-rio-1.jpg',
-      '/assets/project-images/Casa Punta del Rio/Punta-del-rio-2.jpg',
-      '/assets/project-images/Casa Punta del Rio/Punta-del-rio-3.jpg',
-      '/assets/project-images/Casa Punta del Rio/Punta-del-rio-4.jpg',
-      '/assets/project-images/Casa Punta del Rio/Punta-del-rio-5.jpg',
-      '/assets/project-images/Casa Punta del Rio/Punta-del-rio-6.jpg',
-    ],
-    blueprints: [
-      '/assets/project-images/Casa Punta del Rio/PUNTA-DEL-RIO-BLUEPRINT.jpg'
-    ],
-    features: [
-      'Open floor plan with seamless indoor-outdoor flow',
-      'Energy-efficient design with solar panel integration',
-      'Premium materials including natural stone and hardwood',
-      'Smart home technology integration',
-      'Landscaped garden with native plant species',
-      'Three-car garage with electric vehicle charging'
-    ]
-  },
-  'casa-mariposario': {
-    title: 'Casa Mariposario',
-    subtitle: 'Designed to live in harmony with nature, this house opens up to its surroundings with interconnected spaces.',
-    description: 'Designed to live in harmony with nature, this house opens up to its surroundings with interconnected spaces filled with light and air. The large windows invite the landscape to be part of everyday life, while the fluid layout allows every corner to feel alive and connected. Wood as the main material provides a sense of warmth and naturalness, while the earth-toned walls embrace the environment with a cozy and organic vibe. It is a house that breathes with its surroundings, designed to be enjoyed from within.',
-    year: '2022',
-    location: 'Ballena, Osa',
-    size: '1,500 sq ft',
-    type: 'Residential',
-    architect: 'Lead Architect',
-    images: [
-      '/assets/project-images/Casa Mariposario/CASA_MORPHO.JPEG',
-      '/assets/project-images/Casa Mariposario/MARIPOSARIO-POOL.jpg',
-      '/assets/project-images/Casa Mariposario/MARIPOSARIO-EXTERIOR.jpg',
-      '/assets/project-images/Casa Mariposario/Morpho-1.jpg',
-      '/assets/project-images/Casa Mariposario/Morpho-2.jpg',
-      '/assets/project-images/Casa Mariposario/MARIPOSARIO-INTERIOR-V2.jpg',
-    ],
-    blueprints: [
-      '/assets/project-images/Casa Mariposario/MARIPOSARIO-BLUEPRINT.jpg'
-    ],
-    features: [
-      'Open-plan workspace with flexible furniture systems',
-      'Collaboration zones with writable walls',
-      'Private meeting rooms with video conferencing',
-      'Wellness center with fitness facilities',
-      'Rooftop terrace with city views',
-      'LEED Platinum certification',
-      'Bike storage and electric vehicle charging'
-    ]
-  },
-  'casa-esfera': {
-    title: 'Casa Esfera',
-    subtitle: 'Casa Esfera is a contemporary retreat that combines modern lines with a fresh and bright atmosphere.',
-    description: 'Casa Esfera is a contemporary retreat that blends modern lines with a fresh, luminous atmosphere. Its concept revolves around a black-and-white palette that enhances spatial clarity and creates an elegant contrast, highlighting every architectural detail. Located in a privileged setting, the residence opens toward the horizon with panoramic ocean views, allowing natural light to flood each space and reinforce the sense of openness and connection with nature. The design is complemented by teak wood accents, adding warmth and texture to the composition. These natural elements soften the restraint of the monochrome scheme, achieving a perfect balance between modernity and comfort. Casa Esfera is designed for those seeking a sophisticated, airy, and light-filled lifestyle — where architecture and landscape merge in perfect harmony.',
-    year: '2022',
-    location: 'Chontales, Osa',
-    size: '1,500 sq ft',
-    type: 'Residential',
-    architect: 'Lead Architect',
-    images: [
-      '/assets/project-images/CASA-ESFERA.jpg',
-      '/assets/project-images/CASA-ESFERA/ESFERA-EXTERIOR.jpg',
-      '/assets/project-images/CASA-ESFERA/ESFERA-INTERIOR.jpg',
-      '/assets/project-images/CASA-ESFERA/ESFERA-INTERIOR-V2.jpg',
-      '/assets/project-images/CASA-ESFERA/ESFERA-EXTERIOR-V2.JPG',
-      '/assets/project-images/CASA-ESFERA/ESFERA-INTERIOR-V3.jpg',
-    ],
-    blueprints: [
-      '/assets/project-images/CASA-ESFERA/ESFERA-BLUEPRINT.jpg'
-    ],
-    features: [
-      'Grand entrance with double-height foyer',
-      'Master suite with private balcony and ocean views',
-      'Professional-grade kitchen with custom cabinetry',
-      'Wine cellar with climate control system',
-      'Home theater with surround sound',
-      'Infinity pool with integrated spa',
-      'Guest house with separate entrance'
-    ]
-  },
+const locale = (Astro.currentLocale ?? 'en') as 'en' | 'es';
+const project = getProject(slug!, locale);
+if (!project) return Astro.redirect('/');
+const t = getTranslations(locale);
+const basePath = locale === 'en' ? '' : `/${locale}`;
+const localeUrls = {
+  en: getRelativeLocaleUrl('en', `/projects/${slug}`),
+  es: getRelativeLocaleUrl('es', `/projects/${slug}`),
 };
+const navItems = [
+  { id: 'home' as const, label: t.nav.home },
+  { id: 'about' as const, label: t.nav.about },
+  { id: 'services' as const, label: t.nav.services },
+  { id: 'projects' as const, label: t.nav.projects },
+  { id: 'contact' as const, label: t.nav.contact },
+];
+const homeUrl = getRelativeLocaleUrl(locale, '/');
+const projectsUrl = getRelativeLocaleUrl(locale, '/') + '#projects';
 
-const project = projects[slug];
 ---
 
-<Layout title={`${project.title} - Project Details`}>
-  <ProjectHeader />
-  
+<Layout locale={locale} title={`${project.title} - Project Details`}>
+  <Header locale={locale} basePath={basePath} isProjectPage={true} localeUrls={localeUrls} navItems={navItems} />
   <div class="project-detail max-w-7xl mx-auto">
     <!-- Project Header -->
     <section class="project-header">
       <div class="container">
         <nav class="breadcrumb">
-          <a href="/">Home</a> / <a href="/#projects">Projects</a> / <span>{project.title}</span>
+          <a href={homeUrl}>{t.projectDetail.home}</a> / <a href={projectsUrl}>{t.projectDetail.projects}</a> / <span>{project.title}</span>
         </nav>
         <div class="project-intro">
           <div class="project-meta">
@@ -218,15 +54,15 @@ const project = projects[slug];
             <p class="project-subtitle">{project.subtitle}</p>
             <div class="grid lg:grid-cols-[1fr_2fr] grid-cols-1 w-full">
               <div class="detail-item lg:w-10/12 pr-2">
-                <span class="label">Year:</span>
+                <span class="label">{t.projectDetail.year}</span>
                 <span class="value">{project.year}</span>
               </div>
               <div class="detail-item lg:w-full pl-2">
-                <span class="label">Location:</span>
+                <span class="label">{t.projectDetail.location}</span>
                 <span class="value">{project.location}</span>
               </div>
               <div class="detail-item lg:w-10/12 pr-2">
-                <span class="label">Size:</span>
+                <span class="label">{t.projectDetail.size}</span>
                 <span class="value">{project.size}</span>
               </div>
               <div class="detail-item lg:w-full pl-2">
@@ -246,17 +82,17 @@ const project = projects[slug];
     <section class="lg:px-16 w-screen lg:w-full">
       <div class="lg:flex lg:flex-row flex-col justify-between w-screen lg:w-full">
         <div class="lg:w-1/2 p-8 lg:pl-0 w-full" >
-          <h2 class="text-3xl font-semibold mb-6 lg:ml-8 text-gray-700 lg:text-left text-center">Architectural Plans</h2>
-          <div class="">
+          <h2 class="text-3xl font-semibold mb-6 lg:ml-8 text-gray-700 lg:text-left text-center">{t.projectDetail.architecturalPlans}</h2>
+          <div class="flex flex-col">
             {project?.blueprints?.map((blueprint: string, index: number) => (
               <div class="blueprint-item w-full h-full">
-                <img src={blueprint} alt={`${project.title} - Blueprint ${index + 1}`} />
+                <img src={blueprint} alt={`${project.title} - Blueprint ${index + 1}`} class={`w-full ${project?.blueprints?.length === 1 ? 'h-full' : (index % 2 === 0 ? 'h-52' : 'h-full')} object-contain`}/>
               </div>
             ))}
           </div>
         </div>
         <div class="lg:w-1/2 p-8 lg:ml-8 lg:pl-0 w-full">
-          <h2 class="text-3xl font-semibold mb-6 text-gray-700 lg:text-left text-center">Project Overview</h2>
+          <h2 class="text-3xl font-semibold mb-6 text-gray-700 lg:text-left text-center">{t.projectDetail.projectOverview}</h2>
           <p class="text-lg text-gray-600 leading-loose text-center lg:text-left">{project.description}</p>
         </div>
       </div>
@@ -265,7 +101,7 @@ const project = projects[slug];
     <!-- Project Gallery -->
     <section class="project-gallery">
       <div class="container">
-        <h2>Project Gallery</h2>
+        <h2>{t.projectDetail.projectGallery}</h2>
         <ProjectGallery 
           images={project.images} 
           projectTitle={project.title}
@@ -277,7 +113,7 @@ const project = projects[slug];
     <!-- Features Section -->
     <section class="features-section">
       <div class="container">
-        <h2>Key Features</h2>
+        <h2>{t.projectDetail.keyFeatures}</h2>
         <div class="features-grid">
           {project.features.map((feature: string) => (
             <div class="feature-item">
@@ -292,7 +128,7 @@ const project = projects[slug];
     <!-- Back to Projects -->
     <section class="back-to-projects">
       <div class="container">
-        <a href="/#projects" class="back-btn">← Back to All Projects</a>
+        <a href={projectsUrl} class="back-btn">{t.projectDetail.backToProjects}</a>
       </div>
     </section>
   </div>

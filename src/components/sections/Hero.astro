@@ -1,70 +1,91 @@
 ---
-// Hero Section Component: video on desktop, carousel on mobile
-import Carousel from '../Carousel.tsx';
+import { getTranslations } from '../../i18n/translations';
+import type { Locale } from '../../i18n/translations';
 
-const slides = [
-  {
-    image: '/assets/carousel-images/C1-Image.png',
-    alt: 'Modern Luxury House',
-    title: 'Modern Architecture Excellence',
-    subtitle: 'Creating timeless spaces that inspire and endure'
-  },
-  {
-    image: '/assets/carousel-images/C2-Image.png',
-    alt: 'Contemporary Villa',
-    title: 'Contemporary Design',
-    subtitle: 'Innovative solutions for modern living'
-  },
-  {
-    image: '/assets/carousel-images/C4-Image.jpg',
-    alt: 'Elegant Mansion',
-    title: 'Elegant Residences',
-    subtitle: 'Where luxury meets functionality'
-  }
+export interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getTranslations(locale);
+
+// Array único: textos del hero con ventana de tiempo (segundos). El último es la frase final (11.5-12.5s).
+const HERO_TEXTS = [
+  { text: 'Interior Design', start: 0, end: 1 },
+  { text: 'Architecture Design', start: 1.5, end: 2.5 },
+  { text: 'Architectural drawings', start: 3, end: 4 },
+  { text: 'Project and constructing\nconsulting', start: 4.5, end: 5.5 },
+  { text: 'Live The Experience to Build your project with someone who will love it as you', start: 11.5, end: 12.5, isFinal: true },
 ];
+
+const carouselItems = HERO_TEXTS.filter((item) => !item.isFinal);
+const finalItem = HERO_TEXTS.find((item) => item.isFinal);
 ---
 
-<!-- Hero Section: video (desktop) / carousel (mobile) -->
+<!-- Hero Section with Video Background -->
 <section id="home" class="hero relative w-full h-screen overflow-hidden">
-  <!-- Desktop: video -->
   <video
+    id="hero-video"
     autoplay
     loop
     muted
     playsinline
-    class="absolute top-0 left-0 w-full h-full object-cover hidden md:block"
+    webkit-playsinline
+    class="absolute top-0 left-0 w-full h-full object-cover"
   >
-    <source src="/assets/hero-video/WEB VIDEO 2026 (6).mp4" type="video/mp4" />
+    <source src="/assets/hero-video/WEB VIDEO 2026 .mp4" type="video/mp4" />
     Your browser does not support the video tag.
   </video>
+  
+  <!-- Optional overlay for better text readability if needed -->
+  <div class="absolute inset-0 bg-black/20 z-10"></div>
 
-  <!-- Mobile: carousel -->
-  <div class="block md:hidden absolute inset-0 z-0">
-    <Carousel
-      slides={slides}
-      autoplay={true}
-      showControls={true}
-      showDots={true}
-      carouselId="hero-carousel"
-      height="100vh"
-      client:load
-    />
+  <!-- Config para el script (timing del video) -->
+  <script is:inline define:vars={{ heroTextsConfig: HERO_TEXTS }}>
+    window.__HERO_TEXTS_CONFIG__ = heroTextsConfig;
+  </script>
+
+  <!-- Text carousel: generado desde el array (todos menos el último) -->
+  <div id="hero-text-carousel" class="hero-text-carousel absolute inset-0 z-15 flex items-center justify-center pointer-events-none px-4">
+    <div class="hero-carousel-inner text-center max-w-[90vw] sm:max-w-[85vw] md:max-w-[80vw]">
+      {carouselItems.map((item, i) => (
+        <p
+          class:list={[
+            'hero-carousel-item text-white text-xl font-light drop-shadow-lg transition-opacity duration-500',
+            item.text.includes('\n') && 'whitespace-pre-line',
+          ]}
+          data-index={i}
+        >
+          {item.text}
+        </p>
+      ))}
+    </div>
   </div>
 
-  <!-- Overlay -->
-  <div class="absolute inset-0 bg-black/20 z-10"></div>
+  <!-- Frase final: último ítem del array (11.5-12.5s) -->
+  {finalItem && (
+    <div id="hero-final-text" class="hero-final-text absolute inset-0 z-15 flex items-center justify-center pointer-events-none px-4">
+      <p class="hero-final-quote text-white text-center text-xl font-light drop-shadow-lg max-w-[90vw] sm:max-w-[85vw] md:max-w-[700px]">
+        {finalItem.text}
+      </p>
+    </div>
+  )}
      
   <!-- View projects + Get a quote buttons (always in row) -->
   <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-20 flex flex-row items-center justify-center gap-3 sm:gap-4 flex-nowrap">
     <a 
       href="#projects" 
       id="view-projects-btn"
-      class="text-white text-lg sm:text-2xl font-bold border-b hover:border-none px-3 sm:px-4 py-2 rounded-md hover:bg-black/70 transition-colors duration-300 cursor-pointer inline-block whitespace-nowrap"
+      class="text-white text-lg sm:text-2xl font-bold border hover:border-none px-3 sm:px-4 py-2 rounded-md hover:bg-black/70 transition-colors duration-300 cursor-pointer inline-block whitespace-nowrap"
     >
-      View Projects
+      {t.hero.viewProjects}
     </a>
-    <a href="#contact" class="text-white text-lg sm:text-2xl font-bold border-b hover:border-none px-3 sm:px-4 py-2 rounded-md hover:bg-black/70 transition-colors duration-300 cursor-pointer inline-block whitespace-nowrap">
-      Get a quote
+    <a 
+      href="#contact" 
+      id="get-a-quote-btn"
+      class="text-white text-lg sm:text-2xl font-bold border hover:border-none px-3 sm:px-4 py-2 rounded-md hover:bg-black/70 transition-colors duration-300 cursor-pointer inline-block whitespace-nowrap"
+    >
+      {t.hero.getAQuote}
     </a>
   </div>
 </section>
@@ -85,11 +106,110 @@ const slides = [
     object-fit: cover;
     z-index: 0;
   }
+
+  .z-15 {
+    z-index: 15;
+  }
+
+  /* Carousel: only one item visible at a time; items stacked and hidden by default */
+  .hero-carousel-inner {
+    position: relative;
+    width: 100%;
+    min-height: 100%;
+  }
+  .hero-carousel-item {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    margin: 0;
+    opacity: 0;
+    font-size: clamp(1.75rem, 6vw, 4rem);
+    line-height: 1.3;
+    transition: opacity 0.5s ease-in-out;
+  }
+  .hero-carousel-item.visible {
+    opacity: 1;
+  }
+  /* Solo uno visible: carrusel o frase final; el otro totalmente oculto */
+  .hero-text-carousel {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+  }
+  .hero-final-text {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+  }
+  .hero-final-text.visible {
+    opacity: 1;
+    visibility: visible;
+  }
+  .hero-final-quote {
+    font-size: clamp(1.15rem, 3.5vw, 1.75rem);
+    line-height: 1.4;
+  }
+
+  @media (max-width: 768px) {
+    .hero {
+      min-height: 100vh;
+      min-height: -webkit-fill-available;
+    }
+    .hero video {
+      display: block !important;
+      visibility: visible !important;
+      width: 100%;
+      height: 100%;
+      min-height: 100%;
+      object-fit: cover;
+      -webkit-object-fit: cover;
+      z-index: 0;
+    }
+  }
 </style>
 
 <script>
-  // Handle smooth scroll for View Projects button
   document.addEventListener('DOMContentLoaded', () => {
+    const video = document.getElementById('hero-video') as HTMLVideoElement | null;
+    const carousel = document.getElementById('hero-text-carousel');
+    const carouselItems = document.querySelectorAll('.hero-carousel-item');
+    const finalText = document.getElementById('hero-final-text');
+
+    const config = (window as typeof window & { __HERO_TEXTS_CONFIG__?: Array<{ start: number; end: number; isFinal?: boolean }> }).__HERO_TEXTS_CONFIG__;
+    const heroTexts = Array.isArray(config) ? config : [];
+
+    function updateHeroText() {
+      if (!video) return;
+      const t = video.currentTime;
+
+      const activeIndex = heroTexts.findIndex((item) => t >= item.start && t < item.end);
+      const isFinal = activeIndex >= 0 && heroTexts[activeIndex]?.isFinal;
+      const showCarousel = activeIndex >= 0 && !isFinal;
+      const carouselVisibleIndex = showCarousel ? activeIndex : -1;
+
+      if (carousel) {
+        carousel.style.opacity = showCarousel ? '1' : '0';
+        carousel.style.visibility = showCarousel ? 'visible' : 'hidden';
+      }
+      carouselItems.forEach((el, i) => {
+        el.classList.toggle('visible', i === carouselVisibleIndex);
+      });
+      if (finalText) {
+        finalText.classList.toggle('visible', isFinal);
+        finalText.style.visibility = isFinal ? 'visible' : 'hidden';
+        finalText.style.opacity = isFinal ? '1' : '0';
+      }
+    }
+
+    if (video) {
+      video.addEventListener('timeupdate', updateHeroText);
+      video.addEventListener('loadedmetadata', updateHeroText);
+      updateHeroText();
+    }
+
+    // Handle smooth scroll for View Projects button
     const viewProjectsBtn = document.getElementById('view-projects-btn');
     if (viewProjectsBtn) {
       viewProjectsBtn.addEventListener('click', (e) => {
@@ -98,9 +218,7 @@ const slides = [
         if (targetId) {
           const targetElement = document.getElementById(targetId);
           if (targetElement) {
-            // Update URL
             window.history.pushState(null, '', `#${targetId}`);
-            // Smooth scroll
             targetElement.scrollIntoView({
               behavior: 'smooth',
               block: 'start'

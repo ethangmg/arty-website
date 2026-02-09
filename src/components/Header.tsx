@@ -1,23 +1,43 @@
 import React, { useState, useEffect } from 'react';
 
+export interface NavItem {
+  id: 'home' | 'about' | 'services' | 'projects' | 'contact';
+  label: string;
+}
+
 interface HeaderProps {
   className?: string;
   isProjectPage?: boolean;
+  locale?: 'en' | 'es';
+  basePath?: string;
+  navItems?: NavItem[];
+  localeUrls?: { en: string; es: string };
 }
 
-const Header: React.FC<HeaderProps> = ({ className = '', isProjectPage = false }) => {
+const Header: React.FC<HeaderProps> = ({
+  className = '',
+  isProjectPage = false,
+  locale = 'en',
+  basePath = '',
+  navItems: navItemsProp,
+  localeUrls = { en: '/', es: '/es' },
+}) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // Navigation items
-  const navItems = [
-    { id: 'home', label: 'Home', href: '#home' },
-    { id: 'about', label: 'About Us', href: '#about' },
-    { id: 'services', label: 'Services', href: '#services' },
-    { id: 'projects', label: 'Projects', href: '#projects' },
-    { id: 'contact', label: 'Contact Us', href: '#contact' }
+  const defaultNavItems: NavItem[] = [
+    { id: 'home', label: 'Home' },
+    { id: 'about', label: 'About Us' },
+    { id: 'services', label: 'Services' },
+    { id: 'projects', label: 'Projects' },
+    { id: 'contact', label: 'Contact Us' },
   ];
+  const navItems = navItemsProp ?? defaultNavItems;
+
+  const getHref = (id: string) =>
+    basePath ? `${basePath}/${id === 'home' ? '#home' : `#${id}`}` : (id === 'home' ? `/#home` : `/#${id}`);
+  const homeHref = basePath ? `${basePath}/#home` : `/#home`;
 
   // Handle scroll detection and scroll spy
 // ... existing code ...
@@ -32,7 +52,7 @@ const Header: React.FC<HeaderProps> = ({ className = '', isProjectPage = false }
       
       if (heroSection) {
         const heroHeight = heroSection.offsetHeight;
-        setIsScrolled(scrollY > heroHeight * 0.8);
+        setIsScrolled(scrollY > heroHeight * 0.5);
       }
 
       // Scroll spy for active section - check all sections including home
@@ -96,12 +116,13 @@ const Header: React.FC<HeaderProps> = ({ className = '', isProjectPage = false }
     
     // If we're on a project page, navigate to main page with hash
     if (isProjectPage) {
-      window.location.href = `/${href}`;
+      window.location.href = href;
       return;
     }
     
-    // Normal navigation for main page
-    const targetId = href.replace('#', '');
+    // Normal navigation for main page (extract hash so it works with basePath e.g. /es/#contact)
+    const hashPart = href.includes('#') ? href.split('#')[1] : '';
+    const targetId = hashPart || 'home';
     const targetElement = document.getElementById(targetId);
     
     if (targetElement) {
@@ -144,29 +165,27 @@ const Header: React.FC<HeaderProps> = ({ className = '', isProjectPage = false }
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex items-center space-x-3">
-            <img 
-              src="/assets/logo/arty-studio-yellow-logo.png" 
-              alt="Arty Studio Logo" 
-              className="w-10 h-10"
-            />
             <a 
-              href={isProjectPage ? "/#home" : "#home"}
-              onClick={(e) => handleNavClick(isProjectPage ? "/#home" : "#home", e)}
-              className={`text-xl font-semibold transition-colors duration-300 ${
-                isProjectPage ? 'text-gray-900' : (isScrolled ? 'text-gray-900' : 'text-white')
-              }`}
+              href={homeHref}
+              onClick={(e) => handleNavClick(homeHref, e)}
             >
-              ARTY STUDIO
+              <img 
+                src="/assets/logo/arty-studio-terracota-logo.png" 
+                alt="Arty Studio Logo" 
+                className="h-40 object-contain"
+              />
             </a>
           </div>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            {navItems.filter(item => item.id !== 'home').map((item) => (
+            {navItems.filter(item => item.id !== 'home').map((item) => {
+              const itemHref = getHref(item.id);
+              return (
               <a
                 key={item.id}
-                href={isProjectPage ? `/${item.href}` : item.href}
-                onClick={(e) => handleNavClick(isProjectPage ? `/${item.href}` : item.href, e)}
+                href={itemHref}
+                onClick={(e) => handleNavClick(itemHref, e)}
                 className={`relative font-medium transition-all duration-300 hover:scale-105 ${
                   isProjectPage 
                     ? 'text-gray-900 hover:text-gray-700' 
@@ -190,8 +209,28 @@ const Header: React.FC<HeaderProps> = ({ className = '', isProjectPage = false }
                   }`} />
                 )}
               </a>
-            ))}
+            );
+            })}
           </div>
+
+          {/* Language switcher */}
+          {localeUrls && (
+            <div className="hidden md:flex items-center gap-2 ml-4 text-sm font-medium">
+              <a
+                href={localeUrls.en}
+                className={locale === 'en' ? 'text-gray-900 underline' : (isProjectPage || isScrolled ? 'text-gray-600 hover:text-gray-900' : 'text-gray-200 hover:text-white')}
+              >
+                EN
+              </a>
+              <span className={isProjectPage || isScrolled ? 'text-gray-400' : 'text-gray-300'}>|</span>
+              <a
+                href={localeUrls.es}
+                className={locale === 'es' ? 'text-gray-900 underline' : (isProjectPage || isScrolled ? 'text-gray-600 hover:text-gray-900' : 'text-gray-200 hover:text-white')}
+              >
+                ES
+              </a>
+            </div>
+          )}
 
           {/* Mobile menu button */}
           <div className="md:hidden">
@@ -223,12 +262,14 @@ const Header: React.FC<HeaderProps> = ({ className = '', isProjectPage = false }
             : 'max-h-0 opacity-0 overflow-hidden'
         }`}>
           <div className="px-2 pt-2 pb-3 space-y-1 bg-white shadow-lg rounded-lg mt-2">
-            {navItems.filter(item => item.id !== 'home').map((item) => (
+            {navItems.filter(item => item.id !== 'home').map((item) => {
+              const itemHref = getHref(item.id);
+              return (
               <a
                 key={item.id}
-                href={isProjectPage ? `/${item.href}` : item.href}
+                href={itemHref}
                 onClick={(e) => {
-                  handleNavClick(isProjectPage ? `/${item.href}` : item.href, e);
+                  handleNavClick(itemHref, e);
                   setIsMobileMenuOpen(false);
                 }}
                 className={`block px-3 py-2 rounded-md text-base font-medium transition-colors duration-300 ${
@@ -239,7 +280,8 @@ const Header: React.FC<HeaderProps> = ({ className = '', isProjectPage = false }
               >
                 {item.label}
               </a>
-            ))}
+            );
+            })}
           </div>
         </div>
       </nav>

@@ -1,69 +1,38 @@
 ---
-// Projects Section Component
+import { getRelativeLocaleUrl } from 'astro:i18n';
 import Card from '../Card.tsx';
+import { getTranslations } from '../../i18n/translations';
+import { getProjectsList } from '../../i18n/projects';
+import type { Locale } from '../../i18n/translations';
 
-const projects = [
-  {
-    image: '/assets/project-images/CASA-B.png',
-    alt: 'Casa B',
-    title: 'Casa B',
-    description: 'Casa B is a cozy retreat where the architecture feels close, intimate, and natural.',
-    link: '/projects/casa-b'
-  },
-  {
-    image: '/assets/project-images/CASA-C.png',
-    alt: 'Casa C',
-    title: 'Casa C',
-    description: 'Casa C is a cozy retreat that celebrates tropical style from a contemporary perspective.',
-    link: '/projects/casa-c'
-  },
-  {
-    image: '/assets/project-images/CASA-VISTA-LINDA.png',
-    alt: 'Casa Vista Linda Project',
-    title: 'Casa Vista Linda',
-    description: 'Casa Vista Linda, located in Chontales de Osa, has been architecturally designed to maximize the property\'s breathtaking views.',
-    link: '/projects/linda-vista'
-  },
-  {
-    image: '/assets/project-images/CASA-PUNTA-DEL-RIO.jpg',
-    alt: 'Casa Punta del Rio',
-    title: 'Casa Punta del Rio',
-    description: 'This project, located in Marina Vista, Dominicalito, was designed to blend architecture with nature in a single harmonious language.',
-    link: '/projects/casa-punta-del-rio'
-  },
-  { 
-    image: '/assets/project-images/CASA-MARIPOSARIO.jpg',
-    alt: 'Casa Mariposario',
-    title: 'Casa Mariposario',
-    description: 'Designed to live in harmony with nature, this house opens up to its surroundings with interconnected spaces.',
-    link: '/projects/casa-mariposario'
-  },
-  {
-    image: '/assets/project-images/CASA-ESFERA.jpg',
-    alt: 'Casa Esfera',
-    title: 'Casa Esfera',
-    description: 'Casa Esfera is a contemporary retreat that combines modern lineswith a fresh and bright atmosphere.',
-    link: '/projects/casa-esfera'
-  }
-];
-//bg-gray-50
+export interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getTranslations(locale);
+const projectList = getProjectsList(locale).map((p) => ({
+  ...p,
+  link: getRelativeLocaleUrl(locale, `/projects/${p.slug}`),
+}));
 ---
 
 <!-- Projects Section -->
 <section id="projects" class="py-24 bg-white">
   <div class="max-w-6xl mx-auto px-8">
     <div class="text-center mb-16">
-      <h2 class="text-4xl font-semibold mb-4 text-gray-800">Featured Projects</h2>
-      <p class="text-lg text-gray-600 max-w-2xl mx-auto">Explore our portfolio of exceptional architectural achievements</p>
+      <h2 class="text-4xl font-semibold mb-4 text-gray-800">{t.projects.title}</h2>
+      <p class="text-lg text-gray-600 max-w-2xl mx-auto">{t.projects.subtitle}</p>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      {projects.map((project, index) => (
+      {projectList.map((project) => (
         <Card
           image={project.image}
           alt={project.alt}
           title={project.title}
           description={project.description}
           link={project.link}
+          linkText={t.common.viewDetails}
           variant="project"
           client:load
         />

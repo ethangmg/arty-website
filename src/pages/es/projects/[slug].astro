@@ -1,0 +1,522 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import Layout from '../../../layouts/Layout.astro';
+import Header from '../../../components/Header.tsx';
+import ProjectGallery from '../../../components/ProjectGallery.tsx';
+import { getProject } from '../../../i18n/projects';
+import { getTranslations } from '../../../i18n/translations';
+
+export async function getStaticPaths() {
+  return [
+    { params: { slug: 'casa-b' } },
+    { params: { slug: 'casa-c' } },
+    { params: { slug: 'linda-vista' } },
+    { params: { slug: 'casa-punta-del-rio' } },
+    { params: { slug: 'casa-mariposario' } },
+    { params: { slug: 'casa-esfera' } },
+  ];
+}
+
+const { slug } = Astro.params;
+const locale = (Astro.currentLocale ?? 'en') as 'en' | 'es';
+const project = getProject(slug!, locale);
+if (!project) return Astro.redirect('/es');
+const t = getTranslations(locale);
+const basePath = locale === 'en' ? '' : `/${locale}`;
+const localeUrls = {
+  en: getRelativeLocaleUrl('en', `/projects/${slug}`),
+  es: getRelativeLocaleUrl('es', `/projects/${slug}`),
+};
+const navItems = [
+  { id: 'home' as const, label: t.nav.home },
+  { id: 'about' as const, label: t.nav.about },
+  { id: 'services' as const, label: t.nav.services },
+  { id: 'projects' as const, label: t.nav.projects },
+  { id: 'contact' as const, label: t.nav.contact },
+];
+const homeUrl = getRelativeLocaleUrl(locale, '/');
+const projectsUrl = getRelativeLocaleUrl(locale, '/') + '#projects';
+
+---
+
+<Layout locale={locale} title={`${project.title} - Project Details`}>
+  <Header locale={locale} basePath={basePath} isProjectPage={true} localeUrls={localeUrls} navItems={navItems} />
+  
+  <div class="project-detail max-w-7xl mx-auto">
+    <!-- Project Header -->
+    <section class="project-header">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href={homeUrl}>{t.projectDetail.home}</a> / <a href={projectsUrl}>{t.projectDetail.projects}</a> / <span>{project.title}</span>
+        </nav>
+        <div class="project-intro">
+          <div class="project-meta">
+            <h1>{project.title}</h1>
+            <p class="project-subtitle">{project.subtitle}</p>
+            <div class="grid lg:grid-cols-[1fr_2fr] grid-cols-1 w-full">
+              <div class="detail-item lg:w-10/12 pr-2">
+                <span class="label">{t.projectDetail.year}</span>
+                <span class="value">{project.year}</span>
+              </div>
+              <div class="detail-item lg:w-full pl-2">
+                <span class="label">{t.projectDetail.location}</span>
+                <span class="value">{project.location}</span>
+              </div>
+              <div class="detail-item lg:w-10/12 pr-2">
+                <span class="label">{t.projectDetail.size}</span>
+                <span class="value">{project.size}</span>
+              </div>
+              <div class="detail-item lg:w-full pl-2">
+                <span class="label">Type:</span>
+                <span class="value">{project.type}</span>
+              </div>
+            </div>
+          </div>
+          <div class="project-image">
+            <img src={project.images[0]} alt={project.title} />
+          </div>
+        </div>
+      </div>
+    </section>
+
+      <!-- Project Description -->
+    <section class="lg:px-16 w-screen lg:w-full">
+      <div class="lg:flex lg:flex-row flex-col justify-between w-screen lg:w-full">
+        <div class="lg:w-1/2 p-8 lg:pl-0 w-full" >
+          <h2 class="text-3xl font-semibold mb-6 lg:ml-8 text-gray-700 lg:text-left text-center">{t.projectDetail.architecturalPlans}</h2>
+          <div class="flex flex-col">
+            {project?.blueprints?.map((blueprint: string, index: number) => (
+              <div class="blueprint-item w-full h-full">
+                <img src={blueprint} alt={`${project.title} - Blueprint ${index + 1}`} class={`w-full ${project?.blueprints?.length === 1 ? 'h-full' : (index % 2 === 0 ? 'h-52' : 'h-full')} object-contain`}/>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div class="lg:w-1/2 p-8 lg:ml-8 lg:pl-0 w-full">
+          <h2 class="text-3xl font-semibold mb-6 text-gray-700 lg:text-left text-center">{t.projectDetail.projectOverview}</h2>
+          <p class="text-lg text-gray-600 leading-loose text-center lg:text-left">{project.description}</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Project Gallery -->
+    <section class="project-gallery">
+      <div class="container">
+        <h2>{t.projectDetail.projectGallery}</h2>
+        <ProjectGallery 
+          images={project.images} 
+          projectTitle={project.title}
+          client:load
+        />
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section">
+      <div class="container">
+        <h2>{t.projectDetail.keyFeatures}</h2>
+        <div class="features-grid">
+          {project.features.map((feature: string) => (
+            <div class="feature-item">
+              <div class="feature-icon">✓</div>
+              <p>{feature}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Back to Projects -->
+    <section class="back-to-projects">
+      <div class="container">
+        <a href={projectsUrl} class="back-btn">{t.projectDetail.backToProjects}</a>
+      </div>
+    </section>
+  </div>
+
+  <!-- Image Modal -->
+  <div id="imageModal" class="modal">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <img class="modal-content" id="modalImage">
+    <div class="modal-caption" id="modalCaption"></div>
+  </div>
+
+  <style>
+    .project-detail {
+      padding-top: 70px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    /* Project Header */
+    .project-header {
+      padding: 4rem 0;
+      background-color: #fff;
+    }
+
+    .breadcrumb {
+      margin-bottom: 2rem;
+      color: #666;
+    }
+
+    .breadcrumb a {
+      color: #333;
+      text-decoration: none;
+    }
+
+    .breadcrumb a:hover {
+      text-decoration: underline;
+    }
+
+    .project-intro {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .project-meta h1 {
+      font-size: 3rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: #333;
+    }
+
+    .project-subtitle {
+      font-size: 1.25rem;
+      color: #666;
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+
+    .detail-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid #e9ecef;
+
+    }
+
+    .detail-item .label {
+      font-weight: 500;
+      color: #333;
+    }
+
+    .detail-item .value {
+      color: #666;
+    }
+
+    .project-image img {
+      width: 100%;
+      height: 400px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    /* Project Description */
+
+
+    /* Project Gallery */
+    .project-gallery {
+      padding: 4rem 0;
+      background-color: #fff;
+    }
+
+    .project-gallery h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      margin-bottom: 2rem;
+      color: #333;
+      text-align: center;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1rem;
+    }
+
+    .gallery-item {
+      cursor: pointer;
+      border-radius: 8px;
+      overflow: hidden;
+      transition: transform 0.3s ease;
+    }
+
+    .gallery-item:hover {
+      transform: scale(1.02);
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+    }
+
+    /* Blueprints Section */
+    .blueprints-section {
+      padding: 4rem 0;
+    }
+
+    .blueprints-section h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      margin-bottom: 2rem;
+      color: #333;
+      text-align: center;
+    }
+
+    .blueprints-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    }
+
+    .blueprint-item img {
+      object-fit: contain;
+      background-color: #fff;
+      border-radius: 8px;
+    }
+
+    /* Features Section */
+    .features-section {
+      padding: 4rem 0;
+      background-color: #fff;
+    }
+
+    .features-section h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      margin-bottom: 2rem;
+      color: #333;
+      text-align: center;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1.5rem;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .feature-icon {
+      background-color: #333;
+      color: white;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.875rem;
+      flex-shrink: 0;
+    }
+
+    .feature-item p {
+      color: #666;
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    /* Back to Projects */
+    .back-to-projects {
+      padding: 2rem 0;
+      text-align: center;
+    }
+
+    .back-btn {
+      display: inline-block;
+      padding: 1rem 2rem;
+      background-color: #333;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      font-weight: 500;
+      transition: background-color 0.3s ease;
+    }
+
+    .back-btn:hover {
+      background-color: #555;
+    }
+
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 2000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.9);
+    }
+
+    .modal-content {
+      margin: auto;
+      display: block;
+      width: 80%;
+      max-width: 700px;
+      max-height: 80%;
+      object-fit: contain;
+    }
+
+    .close {
+      position: absolute;
+      top: 15px;
+      right: 35px;
+      color: #f1f1f1;
+      font-size: 40px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .close:hover {
+      color: #bbb;
+    }
+
+    .modal-caption {
+      margin: auto;
+      display: block;
+      width: 80%;
+      max-width: 700px;
+      text-align: center;
+      color: #ccc;
+      padding: 10px 0;
+      height: 150px;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .project-intro {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+
+      .project-meta h1 {
+        font-size: 2rem;
+      }
+
+      .project-details {
+        grid-template-columns: 1fr;
+      }
+
+      .gallery-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .blueprints-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .modal-content {
+        width: 95%;
+      }
+    }
+  </style>
+
+  <script>
+    // Navigation function for SPA behavior
+    function navigateToProjects() {
+      // Simply navigate to home page with projects hash
+      window.location.href = '/#projects';
+    }
+
+    // Handle header navigation for project pages
+    function setupHeaderNavigation() {
+      // Wait for header to be available
+      const headerLinks = document.querySelectorAll('header a[href^="#"]');
+      if (headerLinks.length === 0) {
+        // If header not ready, try again in 100ms
+        setTimeout(setupHeaderNavigation, 100);
+        return;
+      }
+      
+      headerLinks.forEach(link => {
+        // Remove any existing listeners
+        link.removeEventListener('click', handleHeaderClick);
+        // Add new listener
+        link.addEventListener('click', handleHeaderClick);
+      });
+    }
+
+    function handleHeaderClick(e: Event) {
+      e.preventDefault();
+      const href = (e.target as HTMLAnchorElement).getAttribute('href');
+      if (href && href.startsWith('#')) {
+        window.location.href = `/${href}`;
+      }
+    }
+
+    // Setup navigation when DOM is ready
+    document.addEventListener('DOMContentLoaded', setupHeaderNavigation);
+    
+    // Also setup after a delay to catch React hydration
+    setTimeout(setupHeaderNavigation, 500);
+
+    // Image modal functionality
+    function openModal(index: number) {
+      const modal = document.getElementById('imageModal');
+      const modalImg = document.getElementById('modalImage') as HTMLImageElement;
+      const caption = document.getElementById('modalCaption');
+      // Get images from a DOM element or global JS variable you set in the HTML
+      // E.g. window.PROJECT_IMAGES or data-attributes
+      const imagesAttr = document.getElementById('imageModal')?.getAttribute('data-images');
+      const titleAttr = document.getElementById('imageModal')?.getAttribute('data-title');
+      let images: string[] = [];
+      try {
+        if (imagesAttr) {
+          images = JSON.parse(imagesAttr);
+        }
+      } catch (e) {
+        images = [];
+      }
+      
+      if (modal && modalImg && caption && Array.isArray(images) && images[index]) {
+        modal.style.display = 'block';
+        modalImg.src = images[index];
+        caption.innerHTML = `{project.title} - Image ${index + 1}`;
+      }
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('imageModal');
+      if (modal) {
+        modal.style.display = 'none';
+      }
+    }
+
+    // Close modal when clicking outside the image
+    window.onclick = function(event: Event) {
+      const modal = document.getElementById('imageModal');
+      if (event.target === modal) {
+        if (modal) {
+          modal.style.display = 'none';
+        }
+      }
+    }
+
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(event: KeyboardEvent) {
+      if (event.key === 'Escape') {
+        closeModal();
+      }
+    });
+  </script>
+</Layout>
+

@@ -1,19 +1,26 @@
 ---
+import { getTranslations } from '../i18n/translations';
+import type { Locale } from '../i18n/translations';
+
 export interface Props {
-  title: string;
+  locale: Locale;
+  title?: string;
   description?: string;
 }
 
-const { title, description = "Professional Architecture Portfolio" } = Astro.props;
+const { locale, title: titleProp, description: descProp } = Astro.props;
+const t = getTranslations(locale);
+const title = titleProp ?? t.layout.title;
+const description = descProp ?? t.layout.description;
 ---
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang={locale}>
   <head>
     <meta charset="UTF-8" />
     <meta name="description" content={description} />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" href="/assets/logo/arty-icon.png" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -27,7 +34,12 @@ const { title, description = "Professional Architecture Portfolio" } = Astro.pro
 
     <footer class="footer">
       <div class="footer-container">
-        <p>&copy; 2024 Architect Portfolio. All rights reserved.</p>
+        <p>{t.layout.footer}</p>
+        <p class="footer-credit">
+          <a href="https://www.hermosasoftware.io/" target="_blank" rel="nofollow noopener noreferrer">
+            {t.layout.poweredBy}
+          </a>
+        </p>
       </div>
     </footer>
 
@@ -64,6 +76,18 @@ const { title, description = "Professional Architecture Portfolio" } = Astro.pro
       /* Smooth scrolling */
       html {
         scroll-behavior: smooth;
+      }
+
+      .footer-credit {
+        margin-top: 0.5rem;
+        font-size: 0.875rem;
+      }
+      .footer-credit a {
+        color: #666;
+        text-decoration: none;
+      }
+      .footer-credit a:hover {
+        text-decoration: underline;
       }
 
     </style>
