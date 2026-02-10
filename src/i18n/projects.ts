@@ -18,12 +18,12 @@ export interface Project extends ProjectContent {
 }
 
 const projectSlugs = [
-  'casa-b',
+  //'casa-b',
   'casa-c',
   'linda-vista',
   'casa-punta-del-rio',
   'casa-mariposario',
-  'casa-esfera',
+//  'casa-esfera',
 ] as const;
 
 type ProjectSlug = (typeof projectSlugs)[number];
@@ -32,17 +32,17 @@ const assets: Record<
   ProjectSlug,
   { images: string[]; blueprints: string[] }
 > = {
-  'casa-b': {
-    images: [
-      '/assets/project-images/CASA-B.png',
-      '/assets/project-images/Casa B/Casa-B-interior.jpg',
-      '/assets/project-images/Casa B/Casa-B-Pool.jpg',
-      '/assets/project-images/Casa B/Casa-B-interior-v2.jpg',
-      '/assets/project-images/Casa B/Casa-B-Exterior-v2.jpg',
-      '/assets/project-images/Casa B/Casa-B-interior-v3.jpg',
-    ],
-    blueprints: ['/assets/project-images/Casa B/Casa-B-Blueprint.jpg'],
-  },
+//  'casa-b': {
+//    images: [
+//      '/assets/project-images/CASA-B.png',
+//      '/assets/project-images/Casa B/Casa-B-interior.jpg',
+//      '/assets/project-images/Casa B/Casa-B-Pool.jpg',
+//      '/assets/project-images/Casa B/Casa-B-interior-v2.jpg',
+//      '/assets/project-images/Casa B/Casa-B-Exterior-v2.jpg',
+//      '/assets/project-images/Casa B/Casa-B-interior-v3.jpg',
+//    ],
+//    blueprints: ['/assets/project-images/Casa B/Casa-B-Blueprint.jpg'],
+//  },
   'casa-c': {
     images: [
       '/assets/project-images/Casa C/C_HOUSE_EXTERIOR.jpg',
@@ -110,65 +110,65 @@ const assets: Record<
       '/assets/project-images/Casa Mariposario/casa-morpho-blueprint-2.png',
     ],
   },
-  'casa-esfera': {
-    images: [
-      '/assets/project-images/CASA-ESFERA.jpg',
-      '/assets/project-images/CASA-ESFERA/ESFERA-EXTERIOR.jpg',
-      '/assets/project-images/CASA-ESFERA/ESFERA-INTERIOR.jpg',
-      '/assets/project-images/CASA-ESFERA/ESFERA-INTERIOR-V2.jpg',
-      '/assets/project-images/CASA-ESFERA/ESFERA-EXTERIOR-V2.JPG',
-      '/assets/project-images/CASA-ESFERA/ESFERA-INTERIOR-V3.jpg',
-    ],
-    blueprints: ['/assets/project-images/CASA-ESFERA/ESFERA-BLUEPRINT.jpg'],
-  },
+//  'casa-esfera': {
+//    images: [
+//      '/assets/project-images/CASA-ESFERA.jpg',
+//      '/assets/project-images/CASA-ESFERA/ESFERA-EXTERIOR.jpg',
+//      '/assets/project-images/CASA-ESFERA/ESFERA-INTERIOR.jpg',
+//      '/assets/project-images/CASA-ESFERA/ESFERA-INTERIOR-V2.jpg',
+//      '/assets/project-images/CASA-ESFERA/ESFERA-EXTERIOR-V2.JPG',
+//      '/assets/project-images/CASA-ESFERA/ESFERA-INTERIOR-V3.jpg',
+//    ],
+//    blueprints: ['/assets/project-images/CASA-ESFERA/ESFERA-BLUEPRINT.jpg'],
+//  },
 };
 
 const content: Record<
   ProjectSlug,
   { en: ProjectContent; es: ProjectContent }
 > = {
-  'casa-b': {
-    en: {
-      title: 'Casa B',
-      subtitle:
-        'Contemporary residential design featuring clean lines and sustainable materials',
-      description:
-        'Casa B is a cozy retreat where the architecture feels close, intimate, and natural. The polished concrete floors and walls create a solid and elegant base, while the wood details add warmth and texture, enveloping every corner with a sense of home. The heart of the house lies in the fluid relationship between the spaces: the kitchen, living room, terrace, and pool intertwine in the same environment, designed to enjoy community life without losing harmony with the surroundings.',
-      year: '2025',
-      location: 'Ballena, Osa',
-      size: '140 m2',
-      type: 'Residential',
-      architect: 'Lead Architect',
-      features: [
-        'Open floor plan with seamless indoor-outdoor flow',
-        'Energy-efficient design with solar panel integration',
-        'Premium materials including natural stone and hardwood',
-        'Smart home technology integration',
-        'Landscaped garden with native plant species',
-        'Three-car garage with electric vehicle charging',
-      ],
-    },
-    es: {
-      title: 'Casa B',
-      subtitle:
-        'Diseño residencial contemporáneo con líneas limpias y materiales sostenibles',
-      description:
-        'Casa B es un refugio acogedor donde la arquitectura se siente cercana, íntima y natural. Los pisos y muros de concreto pulido crean una base sólida y elegante, mientras los detalles en madera aportan calidez y textura. El corazón de la casa está en la relación fluida entre los espacios: cocina, sala, terraza y piscina se entrelazan en un mismo ambiente, diseñado para disfrutar la vida en comunidad sin perder la armonía con el entorno.',
-      year: '2025',
-      location: 'Ballena, Osa',
-      size: '140 m2',
-      type: 'Residencial',
-      architect: 'Arquitecto líder',
-      features: [
-        'Planta abierta con flujo interior-exterior',
-        'Diseño energéticamente eficiente con paneles solares',
-        'Materiales premium incluyendo piedra natural y madera',
-        'Tecnología de hogar inteligente',
-        'Jardín con especies nativas',
-        'Garaje para tres vehículos con carga para eléctricos',
-      ],
-    },
-  },
+//  'casa-b': {
+//    en: {
+//      title: 'Casa B',
+//      subtitle:
+//        'Contemporary residential design featuring clean lines and sustainable materials',
+//      description:
+//        'Casa B is a cozy retreat where the architecture feels close, intimate, and natural. The polished concrete floors and walls create a solid and elegant base, while the wood details add warmth and texture, enveloping every corner with a sense of home. The heart of the house lies in the fluid relationship between the spaces: the kitchen, living room, terrace, and pool intertwine in the same environment, designed to enjoy community life without losing harmony with the surroundings.',
+//      year: '2025',
+//      location: 'Ballena, Osa',
+//      size: '140 m2',
+//      type: 'Residential',
+//      architect: 'Lead Architect',
+//      features: [
+//        'Open floor plan with seamless indoor-outdoor flow',
+//        'Energy-efficient design with solar panel integration',
+//        'Premium materials including natural stone and hardwood',
+//        'Smart home technology integration',
+//        'Landscaped garden with native plant species',
+//        'Three-car garage with electric vehicle charging',
+//      ],
+//    },
+//    es: {
+//      title: 'Casa B',
+//      subtitle:
+//        'Diseño residencial contemporáneo con líneas limpias y materiales sostenibles',
+//      description:
+//        'Casa B es un refugio acogedor donde la arquitectura se siente cercana, íntima y natural. Los pisos y muros de concreto pulido crean una base sólida y elegante, mientras los detalles en madera aportan calidez y textura. El corazón de la casa está en la relación fluida entre los espacios: cocina, sala, terraza y piscina se entrelazan en un mismo ambiente, diseñado para disfrutar la vida en comunidad sin perder la armonía con el entorno.',
+//      year: '2025',
+//      location: 'Ballena, Osa',
+//      size: '140 m2',
+//      type: 'Residencial',
+//      architect: 'Arquitecto líder',
+//      features: [
+//        'Planta abierta con flujo interior-exterior',
+//        'Diseño energéticamente eficiente con paneles solares',
+//        'Materiales premium incluyendo piedra natural y madera',
+//        'Tecnología de hogar inteligente',
+//        'Jardín con especies nativas',
+//        'Garaje para tres vehículos con carga para eléctricos',
+//      ],
+//    },
+//  },
   'casa-c': {
     en: {
       title: 'Casa C',
@@ -343,50 +343,50 @@ const content: Record<
       ],
     },
   },
-  'casa-esfera': {
-    en: {
-      title: 'Casa Esfera',
-      subtitle:
-        'Casa Esfera is a contemporary retreat that combines modern lines with a fresh and bright atmosphere.',
-      description:
-        'Casa Esfera is a contemporary retreat that blends modern lines with a fresh, luminous atmosphere. Its concept revolves around a black-and-white palette that enhances spatial clarity and creates an elegant contrast, highlighting every architectural detail. Located in a privileged setting, the residence opens toward the horizon with panoramic ocean views, allowing natural light to flood each space and reinforce the sense of openness and connection with nature. The design is complemented by teak wood accents, adding warmth and texture to the composition. These natural elements soften the restraint of the monochrome scheme, achieving a perfect balance between modernity and comfort. Casa Esfera is designed for those seeking a sophisticated, airy, and light-filled lifestyle — where architecture and landscape merge in perfect harmony.',
-      year: '2022',
-      location: 'Chontales, Osa',
-      size: '1,500 sq ft',
-      type: 'Residential',
-      architect: 'Lead Architect',
-      features: [
-        'Grand entrance with double-height foyer',
-        'Master suite with private balcony and ocean views',
-        'Professional-grade kitchen with custom cabinetry',
-        'Wine cellar with climate control system',
-        'Home theater with surround sound',
-        'Infinity pool with integrated spa',
-        'Guest house with separate entrance',
-      ],
-    },
-    es: {
-      title: 'Casa Esfera',
-      subtitle:
-        'Casa Esfera es un refugio contemporáneo que combina líneas modernas con una atmósfera fresca y luminosa.',
-      description:
-        'Casa Esfera es un refugio contemporáneo que fusiona líneas modernas con una atmósfera fresca y luminosa. Su concepto gira en torno a una paleta en blanco y negro que realza la claridad espacial y crea un contraste elegante. Ubicada en un entorno privilegiado, la residencia se abre al horizonte con vistas panorámicas al océano. El diseño se complementa con acentos en madera de teca, aportando calidez y textura. Casa Esfera está diseñada para quienes buscan un estilo de vida sofisticado, aireado y lleno de luz.',
-      year: '2022',
-      location: 'Chontales, Osa',
-      size: '1,500 sq ft',
-      type: 'Residencial',
-      architect: 'Arquitecto líder',
-      features: [
-        'Entrada con doble altura',
-        'Suite principal con balcón y vistas al mar',
-        'Cocina profesional',
-        'Cava con control de clima',
-        'Sala de cine',
-        'Piscina infinita con spa',
-        'Casa de invitados con entrada independiente',
-      ],
-    },
-  },
+//  'casa-esfera': {
+//    en: {
+//      title: 'Casa Esfera',
+//      subtitle:
+//        'Casa Esfera is a contemporary retreat that combines modern lines with a fresh and bright atmosphere.',
+//      description:
+//        'Casa Esfera is a contemporary retreat that blends modern lines with a fresh, luminous atmosphere. Its concept revolves around a black-and-white palette that enhances spatial clarity and creates an elegant contrast, highlighting every architectural detail. Located in a privileged setting, the residence opens toward the horizon with panoramic ocean views, allowing natural light to flood each space and reinforce the sense of openness and connection with nature. The design is complemented by teak wood accents, adding warmth and texture to the composition. These natural elements soften the restraint of the monochrome scheme, achieving a perfect balance between modernity and comfort. Casa Esfera is designed for those seeking a sophisticated, airy, and light-filled lifestyle — where architecture and landscape merge in perfect harmony.',
+//      year: '2022',
+//      location: 'Chontales, Osa',
+//      size: '1,500 sq ft',
+//      type: 'Residential',
+//      architect: 'Lead Architect',
+//      features: [
+//        'Grand entrance with double-height foyer',
+//        'Master suite with private balcony and ocean views',
+//        'Professional-grade kitchen with custom cabinetry',
+//        'Wine cellar with climate control system',
+//        'Home theater with surround sound',
+//        'Infinity pool with integrated spa',
+//        'Guest house with separate entrance',
+//      ],
+//    },
+//    es: {
+//      title: 'Casa Esfera',
+//      subtitle:
+//        'Casa Esfera es un refugio contemporáneo que combina líneas modernas con una atmósfera fresca y luminosa.',
+//      description:
+//        'Casa Esfera es un refugio contemporáneo que fusiona líneas modernas con una atmósfera fresca y luminosa. Su concepto gira en torno a una paleta en blanco y negro que realza la claridad espacial y crea un contraste elegante. Ubicada en un entorno privilegiado, la residencia se abre al horizonte con vistas panorámicas al océano. El diseño se complementa con acentos en madera de teca, aportando calidez y textura. Casa Esfera está diseñada para quienes buscan un estilo de vida sofisticado, aireado y lleno de luz.',
+//      year: '2022',
+//      location: 'Chontales, Osa',
+//      size: '1,500 sq ft',
+//      type: 'Residencial',
+//      architect: 'Arquitecto líder',
+//      features: [
+//        'Entrada con doble altura',
+//        'Suite principal con balcón y vistas al mar',
+//        'Cocina profesional',
+//        'Cava con control de clima',
+//        'Sala de cine',
+//        'Piscina infinita con spa',
+//        'Casa de invitados con entrada independiente',
+//      ],
+//    },
+//  },
 };
 
 export function getProjectSlugs(): readonly string[] {
