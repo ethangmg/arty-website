@@ -170,9 +170,9 @@ const Header: React.FC<HeaderProps> = ({
               onClick={(e) => handleNavClick(homeHref, e)}
             >
               <img 
-                src="/assets/logo/arty-studio-terracota-logo.png" 
+                src={`/assets/logo/${isScrolled || isProjectPage ? 'arty-black-logo.png' : 'arty-white-logo.png'}`}
                 alt="Arty Studio Logo" 
-                className="h-40 object-contain"
+                className="h-10 object-contain"
               />
             </a>
           </div>
