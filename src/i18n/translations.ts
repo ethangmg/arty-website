@@ -24,7 +24,7 @@ const translations = {
       stats: {
         projectsCompleted: 'Projects Completed',
         yearsExperience: 'Years Experience',
-        clientSatisfaction: 'Client Satisfaction',
+        clientSatisfaction: 'Returning clients',
       },
       imageAlt: 'Professional Architect',
     },
@@ -137,7 +137,7 @@ const translations = {
       stats: {
         projectsCompleted: 'Proyectos Completados',
         yearsExperience: 'Años de Experiencia',
-        clientSatisfaction: 'Satisfacción del Cliente',
+        clientSatisfaction: 'Clientes Recurrentes',
       },
       imageAlt: 'Arquitecto profesional',
     },
