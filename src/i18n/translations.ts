@@ -73,6 +73,7 @@ const translations = {
     projects: {
       title: 'Featured Projects',
       subtitle: 'Explore our portfolio of exceptional architectural achievements',
+      portfolioLink: 'Our complete digital portfolio',
     },
     contact: {
       title: 'Contact Us',
@@ -186,6 +187,7 @@ const translations = {
     projects: {
       title: 'Proyectos Destacados',
       subtitle: 'Explora nuestro portafolio de logros arquitectónicos excepcionales',
+      portfolioLink: 'Nuestro portafolio digital completo',
     },
     contact: {
       title: 'Contacto',

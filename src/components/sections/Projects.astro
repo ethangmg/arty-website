@@ -23,6 +23,7 @@ const projectList = getProjectsList(locale).map((p) => ({
     <div class="text-center mb-16">
       <h2 class="text-4xl font-semibold mb-4 text-gray-800">{t.projects.title}</h2>
       <p class="text-lg text-gray-600 max-w-2xl mx-auto">{t.projects.subtitle}</p>
+      <a href="https://drive.google.com/drive/folders/1J9jzDx8REKHP2cz6N_SDDBPTPJrXl9-v" target="_blank" class="text-gray-800 border-b border-gray-800 font-medium transition-colors duration-300 hover:text-gray-600">{t.projects.portfolioLink}</a>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       {projectList.map((project) => (
