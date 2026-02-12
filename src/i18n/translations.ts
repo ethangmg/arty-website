@@ -16,7 +16,7 @@ const translations = {
     about: {
       title: 'About Us',
       subtitle: 'Passionate about creating exceptional architectural experiences',
-      heading: 'Meet Our Architect',
+      heading: 'Meet Our Team',
       paragraph1:
         'We are a creative studio where art and architecture intertwine to bring unique, functional, and meaningful spaces to life. At ARTY, we believe in the power of design to transform realities, excite, and connect.',
       paragraph2:
@@ -39,8 +39,8 @@ const translations = {
             'We design functional, aesthetic, and sustainable spaces, adapted to the environment and the needs of each client.',
         },
         {
-          alt: 'Enterprise architecture.',
-          title: 'Enterprise architecture.',
+          alt: 'Commercial architecture.',
+          title: 'Commercial architecture.',
           description:
             'We develop architectural solutions for offices, commercial premises, coworking spaces, and start-ups, optimizing the functionality of the space and projecting the identity of each brand.',
         },
@@ -63,8 +63,8 @@ const translations = {
             'We integrate art into spaces through decorative elements, furniture, murals, and pieces selected with aesthetic and emotional intent.',
         },
         {
-          alt: 'Project management and consulting Projects',
-          title: 'Project management and consulting Projects',
+          alt: 'Project management and consulting',
+          title: 'Project management and consulting',
           description:
             'We accompany the construction process from planning to execution. We supervise costs, schedules, suppliers, and quality of work.',
         },
@@ -90,6 +90,8 @@ const translations = {
       placeholderSubject: 'Subject',
       placeholderMessage: 'Your Message',
       sendMessage: 'Send Message',
+      messageSentSuccess: 'Message sent successfully.',
+      messageSentError: 'Something went wrong. Please try again.',
     },
     layout: {
       title: 'Architect Portfolio - Professional Architecture Services',
@@ -130,7 +132,7 @@ const translations = {
     about: {
       title: 'Nosotros',
       subtitle: 'Apasionados por crear experiencias arquitectónicas excepcionales',
-      heading: 'Conoce a nuestro arquitecto',
+      heading: 'Conoce a nuestro equipo',
       paragraph1:
         'Somos un estudio creativo donde el arte y la arquitectura se entrelazan para dar vida a espacios únicos, funcionales y significativos. En ARTY creemos en el poder del diseño para transformar realidades, emocionar y conectar.',
       paragraph2:
@@ -153,8 +155,8 @@ const translations = {
             'Diseñamos espacios funcionales, estéticos y sostenibles, adaptados al entorno y a las necesidades de cada cliente.',
         },
         {
-          alt: 'Arquitectura empresarial',
-          title: 'Arquitectura empresarial',
+          alt: 'Arquitectura Comercial',
+          title: 'Arquitectura Comercial',
           description:
             'Desarrollamos soluciones arquitectónicas para oficinas, locales comerciales, coworkings y startups, optimizando la funcionalidad del espacio y proyectando la identidad de cada marca.',
         },
@@ -204,6 +206,8 @@ const translations = {
       placeholderSubject: 'Asunto',
       placeholderMessage: 'Tu mensaje',
       sendMessage: 'Enviar mensaje',
+      messageSentSuccess: 'Mensaje enviado correctamente.',
+      messageSentError: 'Algo salió mal. Por favor intenta de nuevo.',
     },
     layout: {
       title: 'Portafolio de Arquitectura - Servicios Profesionales',

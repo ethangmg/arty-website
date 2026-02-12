@@ -8,6 +8,7 @@ export interface Props {
 
 const { locale } = Astro.props;
 const t = getTranslations(locale);
+const formspreeUrl = import.meta.env.FORMSPREE_URL || '';
 const contact = [
   { title: t.contact.email, value: 'mmora@artyarquitectura.com' },
   { title: t.contact.phone, value: '+506 89567307' },
@@ -34,7 +35,8 @@ const contact = [
           ))}
         </div>
       </div>
-      <form class="contact-form flex flex-col space-y-6">
+      <form class="contact-form flex flex-col space-y-6" data-formspree-url={formspreeUrl} data-success-message={t.contact.messageSentSuccess} data-error-message={t.contact.messageSentError} data-submit-label={t.contact.sendMessage} method="POST">
+        <div id="form-message" class="hidden p-4 rounded text-base" role="status" aria-live="polite"></div>
         <div class="form-group">
           <input type="text" name="name" placeholder={t.contact.placeholderName} required class="w-full p-4 border border-gray-300 rounded text-base font-inherit transition-colors duration-300 focus:outline-none focus:border-gray-800">
         </div>
@@ -53,4 +55,62 @@ const contact = [
   </div>
 </section>
 
+<script>
+  const form = document.querySelector<HTMLFormElement>('.contact-form');
+  const messageEl = document.getElementById('form-message');
+  if (form && messageEl) {
+    const msgEl = messageEl;
+    const url = form.dataset.formspreeUrl;
+    const successText = form.dataset.successMessage ?? 'Message sent successfully.';
+    const errorText = form.dataset.errorMessage ?? 'Something went wrong. Please try again.';
+
+    function showMessage(text: string, isError: boolean) {
+      msgEl.textContent = text;
+      msgEl.classList.remove('hidden');
+      msgEl.classList.remove('bg-green-100', 'text-green-800', 'bg-red-100', 'text-red-800');
+      msgEl.classList.add(isError ? 'bg-red-100' : 'bg-green-100', isError ? 'text-red-800' : 'text-green-800');
+    }
+
+    function hideMessage() {
+      msgEl.classList.add('hidden');
+      msgEl.textContent = '';
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!url) {
+        showMessage(errorText, true);
+        return;
+      }
+      hideMessage();
+      const submitBtn = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = '...';
+      }
+      try {
+        const body = new FormData(form);
+        const res = await fetch(url, {
+          method: 'POST',
+          body,
+          headers: { Accept: 'application/json' },
+        });
+        const data = await res.json().catch(() => ({}));
+        if (data.ok !== false && res.ok) {
+          showMessage(successText, false);
+          form.reset();
+        } else {
+          showMessage(errorText, true);
+        }
+      } catch {
+        showMessage(errorText, true);
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = form.dataset.submitLabel || 'Send Message';
+        }
+      }
+    });
+  }
+</script>
 
